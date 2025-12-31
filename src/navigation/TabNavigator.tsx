@@ -27,16 +27,18 @@ export default function TabNavigator() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName: any;
 
-          if (route.name === "home")
+          if (route.name === "index")
             iconName = focused ? "home" : "home-outline";
           if (route.name === "cards")
             iconName = focused ? "card" : "card-outline";
+          if (route.name === "profile")
+            iconName = focused ? "person" : "person-outline";
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
       })}
     >
-      <Tabs.Screen name="index" options={{ href: null }} />
+      <Tabs.Screen name="index" options={{ title: "Home" }} />
       <Tabs.Screen name="home" options={{ title: "Home" }} />
       <Tabs.Screen name="cards" options={{ title: "Cards" }} />
     </Tabs>
