@@ -1,20 +1,18 @@
-import React, { useContext, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-  ViewStyle,
-} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import React, { useContext, useState } from "react";
+import {
+  Alert,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import AppScreen from "../components/AppScreen";
 import { AuthContext } from "../context/AuthContext";
 import { ThemeContext } from "../context/ThemeContext";
 import { themeColors } from "../utils/themeColors";
-import AppScreen from "../components/AppScreen";
-import api from "../api/api";
 
 export default function CustomerProfileUpdate() {
   const { user } = useContext(AuthContext);

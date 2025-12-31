@@ -38,8 +38,7 @@ export default function TabNavigator() {
         },
       })}
     >
-      <Tabs.Screen name="index" options={{ title: "Home" }} />
-      <Tabs.Screen name="home" options={{ title: "Home" }} />
+      <Tabs.Screen name="index" options={{ title: "My Accounts" }} />
       <Tabs.Screen name="cards" options={{ title: "Cards" }} />
     </Tabs>
   );

@@ -1,19 +1,19 @@
+import * as ImagePicker from "expo-image-picker";
 import React, { useContext, useState } from "react";
 import {
-  View,
+  Alert,
+  Image,
+  StyleSheet,
   Text,
   TextInput,
-  StyleSheet,
-  Image,
   TouchableOpacity,
-  Alert,
+  View,
 } from "react-native";
+import api from "../api/api";
+import AppScreen from "../components/AppScreen";
 import { AuthContext } from "../context/AuthContext";
 import { ThemeContext } from "../context/ThemeContext";
 import { themeColors } from "../utils/themeColors";
-import * as ImagePicker from "expo-image-picker";
-import AppScreen from "../components/AppScreen";
-import api from "../api/api";
 
 export default function ProfileScreen() {
   const { user, token, logout } = useContext(AuthContext);
@@ -54,8 +54,10 @@ export default function ProfileScreen() {
           style={styles.avatar}
         />
 
-        <Text style={[styles.name, { color: colors.text }]}>{user.name}</Text>
-        <Text style={{ color: colors.muted }}>{user.username}</Text>
+        <Text style={[styles.name, { color: colors.text }]}>
+          {user.FirstName}
+        </Text>
+        <Text style={{ color: colors.muted }}>{user.FirstName}</Text>
 
         <TouchableOpacity onPress={pickImage}>
           <Text style={[styles.link, { color: colors.primary }]}>

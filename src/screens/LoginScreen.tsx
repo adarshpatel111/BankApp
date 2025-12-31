@@ -1,5 +1,4 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useState } from "react";
 import {
   Alert,
@@ -18,7 +17,6 @@ export default function LoginScreen() {
   const { login } = useContext(AuthContext);
   const { theme } = useContext(ThemeContext);
   const colors = themeColors[theme];
-  const navigation = useNavigation<any>();
 
   const [customerId, setCustomerId] = useState("");
   const [password, setPassword] = useState("");

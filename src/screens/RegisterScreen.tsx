@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { router } from "expo-router";
 import React, { useContext, useState } from "react";
 import {
   Alert,
@@ -15,7 +15,6 @@ import { themeColors } from "../utils/themeColors";
 export default function RegisterScreen() {
   const { theme } = useContext(ThemeContext);
   const colors = themeColors[theme];
-  const navigation = useNavigation<any>();
 
   // Steps: 1 = Verify Customer, 2 = OTP, 3 = Create Password
   const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -76,7 +75,7 @@ export default function RegisterScreen() {
       });
 
       Alert.alert("Success", "Account created successfully", [
-        { text: "Login", onPress: () => router.push("Login") },
+        { text: "Login", onPress: () => router.push("/(auth)/login") },
       ]);
     } catch {
       Alert.alert("Error", "Unable to create password");
@@ -183,7 +182,7 @@ export default function RegisterScreen() {
           </>
         )}
 
-        <TouchableOpacity onPress={() => router.push("Login")}>
+        <TouchableOpacity onPress={() => router.push("/(auth)/login")}>
           <Text style={[styles.link, { color: colors.primary }]}>
             Already registered? Login
           </Text>

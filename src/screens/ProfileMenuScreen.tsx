@@ -42,7 +42,11 @@ export default function ProfileMenuScreen() {
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         {/* HEADER */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
             <Ionicons name="arrow-back" size={24} color={colors.text} />
           </TouchableOpacity>
 
