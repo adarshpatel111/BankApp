@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React, { useContext, useState } from "react";
 import {
   Alert,
@@ -11,7 +12,6 @@ import {
 import { AuthContext } from "../context/AuthContext";
 import { ThemeContext } from "../context/ThemeContext";
 import { themeColors } from "../utils/themeColors";
-import { router } from "expo-router";
 
 export default function LoginScreen() {
   const { login } = useContext(AuthContext);
@@ -42,7 +42,7 @@ export default function LoginScreen() {
           placeholderTextColor={colors.muted}
           value={customerId}
           onChangeText={setCustomerId}
-          keyboardType="default"
+          keyboardType="number-pad"
           style={[
             styles.input,
             { color: colors.text, borderColor: colors.border },

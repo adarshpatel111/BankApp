@@ -15,11 +15,6 @@ export default function ProfileMenuScreen() {
   const navigation = useNavigation<any>();
 
   if (!user) return null;
-  const initials = user.FirstName?.split(" ")
-    .map((n: string) => n[0])
-    .join("")
-    .substring(0, 2)
-    .toUpperCase();
 
   const MenuItem = ({
     label,
@@ -59,18 +54,21 @@ export default function ProfileMenuScreen() {
             </Text>
           </View>
 
-          {user.avatar ? (
-            <Image source={{ uri: user.avatar }} style={styles.avatar} />
-          ) : (
-            <View
-              style={[
-                styles.initialsCircle,
-                { backgroundColor: colors.primary },
-              ]}
-            >
-              <Text style={styles.initialsText}>{initials}</Text>
-            </View>
-          )}
+          <View
+            style={[
+              styles.avatarContainer,
+              { backgroundColor: colors.primary },
+            ]}
+          >
+            {user.avatar ? (
+              <Image source={{ uri: user.avatar }} style={styles.avatar} />
+            ) : (
+              <Text style={styles.avatar}>
+                {user.FirstName.toUpperCase().charAt(0)}
+                {user.LastName.toUpperCase().charAt(0)}
+              </Text>
+            )}
+          </View>
         </View>
 
         {/* MENU LIST */}
@@ -131,6 +129,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
   },
+
+  avatarContainer: {
+    borderRadius: 25,
+    overflow: "hidden",
+  },
   avatar: {
     width: 45,
     height: 45,
@@ -143,21 +146,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     textAlignVertical: "center",
     color: "#fff",
-  },
-  initialsCircle: {
-    width: 45,
-    height: 45,
-    borderRadius: 22,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  initialsText: {
-    color: "#fff",
-    fontWeight: "700",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: 16,
   },
 
   /* MENU */

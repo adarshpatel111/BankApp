@@ -31,8 +31,12 @@ export default function TabNavigator() {
             iconName = focused ? "home" : "home-outline";
           if (route.name === "cards")
             iconName = focused ? "card" : "card-outline";
-          if (route.name === "profile")
-            iconName = focused ? "person" : "person-outline";
+          if (route.name === "help")
+            iconName = focused ? "help" : "help-outline";
+          if (route.name === "more")
+            iconName = focused
+              ? "ellipsis-horizontal"
+              : "ellipsis-horizontal-outline";
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
@@ -40,6 +44,8 @@ export default function TabNavigator() {
     >
       <Tabs.Screen name="index" options={{ title: "My Accounts" }} />
       <Tabs.Screen name="cards" options={{ title: "Cards" }} />
+      <Tabs.Screen name="help" options={{ title: "Help" }} />
+      <Tabs.Screen name="more" options={{ title: "More" }} />
     </Tabs>
   );
 }

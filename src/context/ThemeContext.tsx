@@ -1,15 +1,15 @@
-import React, { createContext, useState, ReactNode, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { createContext, ReactNode, useEffect, useState } from "react";
 
 export type Theme = "blue" | "orange" | "dark";
 
 export const ThemeContext = createContext({
-  theme: "blue" as Theme,
+  theme: "orange" as Theme,
   setTheme: (t: Theme) => {},
 });
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setThemeState] = useState<Theme>("blue");
+  const [theme, setThemeState] = useState<Theme>("orange");
   const setTheme = async (t: Theme) => {
     setThemeState(t);
     await AsyncStorage.setItem("theme", t);

@@ -1,20 +1,20 @@
+import { Ionicons } from "@expo/vector-icons";
+import { Picker } from "@react-native-picker/picker";
 import React, { useContext, useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  FlatList,
   ActivityIndicator,
+  FlatList,
   StyleSheet,
+  Text,
+  View,
 } from "react-native";
-import { AuthContext, Account } from "../context/AuthContext";
 import api from "../api/api";
-import { encryptAccountNumber } from "../utils/crypto";
 import AppScreen from "../components/AppScreen";
-import { themeColors } from "../utils/themeColors";
+import { Account, AuthContext } from "../context/AuthContext";
 import { ThemeContext } from "../context/ThemeContext";
-import { Picker } from "@react-native-picker/picker";
+import { encryptAccountNumber } from "../utils/crypto";
 import formatDate from "../utils/FormateDate";
-import { Ionicons } from "@expo/vector-icons";
+import { themeColors } from "../utils/themeColors";
 
 type Transaction = {
   TransactionId: string;
@@ -184,7 +184,7 @@ export default function PassbookScreen() {
                         styles.txContainer,
                         {
                           backgroundColor: colors.card,
-                          shadowColor: colors.shadow,
+                          boxShadow: `0px 8px 16px ${colors.shadow}`,
                         },
                       ]}
                     >
@@ -267,11 +267,10 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 12,
     marginBottom: 12,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
+    boxShadow: "0px 4px 8px rgba(0,0,0,0.15)",
     elevation: 3,
   },
+
   txRow: {
     flexDirection: "row",
     justifyContent: "space-between",

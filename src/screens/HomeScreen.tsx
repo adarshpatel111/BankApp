@@ -92,6 +92,7 @@ export default function HomeScreen({ navigation }: any) {
           >
             <Text style={[styles.avatar, { backgroundColor: colors.primary }]}>
               {user.FirstName.toUpperCase().charAt(0)}
+              {user.LastName.toUpperCase().charAt(0)}
             </Text>
           </TouchableOpacity>
         </View>
@@ -182,7 +183,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 12,
   },
-
   accountCard: {
     width: 180,
     height: 120,
@@ -190,10 +190,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginRight: 14,
     justifyContent: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 3 },
-    shadowRadius: 4,
+    boxShadow: "0px 6px 12px rgba(0,0,0,0.2)",
     elevation: 5,
     position: "relative",
   },
