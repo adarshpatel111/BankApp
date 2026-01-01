@@ -12,6 +12,7 @@ import {
 import AppScreen from "../components/AppScreen";
 import { AuthContext } from "../context/AuthContext";
 import { ThemeContext } from "../context/ThemeContext";
+import { formatAmount } from "../utils/Formate";
 import { themeColors } from "../utils/themeColors";
 
 export default function HomeScreen({ navigation }: any) {
@@ -57,7 +58,9 @@ export default function HomeScreen({ navigation }: any) {
           {maskAccountNumber(item.AccountNumber || item.accountNumber)}
         </Text>
         <Text style={styles.balance}>
-          {showBalance ? `₹ ${item.Balance || item.balance}` : "₹ *****"}
+          {showBalance
+            ? `₹ ${formatAmount(item.Balance ?? item.balance)}`
+            : "₹ *****"}
         </Text>
         <Ionicons
           name="card-outline"

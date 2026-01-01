@@ -13,7 +13,7 @@ import AppScreen from "../components/AppScreen";
 import { Account, AuthContext } from "../context/AuthContext";
 import { ThemeContext } from "../context/ThemeContext";
 import { encryptAccountNumber } from "../utils/crypto";
-import formatDate from "../utils/FormateDate";
+import { formatDate } from "../utils/Formate";
 import { themeColors } from "../utils/themeColors";
 
 type Transaction = {

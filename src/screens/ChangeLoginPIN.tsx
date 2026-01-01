@@ -1,22 +1,25 @@
-import React, { useState, useContext } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "expo-router";
+import React, { useContext, useState } from "react";
 import {
-  View,
+  Alert,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  Alert,
+  View,
 } from "react-native";
+import api from "../api/api";
+import AppScreen from "../components/AppScreen";
 import { AuthContext } from "../context/AuthContext";
 import { ThemeContext } from "../context/ThemeContext";
 import { themeColors } from "../utils/themeColors";
-import AppScreen from "../components/AppScreen";
-import api from "../api/api";
 
 export default function ChangeLoginPIN() {
-  const { token } = useContext(AuthContext); // assuming you have token for API
+  const { token } = useContext(AuthContext);
   const { theme } = useContext(ThemeContext);
   const colors = themeColors[theme];
+  const navigation = useNavigation<any>();
 
   const [oldPIN, setOldPIN] = useState("");
   const [newPIN, setNewPIN] = useState("");
@@ -32,28 +35,26 @@ export default function ChangeLoginPIN() {
     }
 
     try {
-      // Replace with your API endpoint
-      const response = await api.get("/change-login-pin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ oldPIN, newPIN }),
-      });
+      const response = await api.post(
+        "/change-login-pin",
+        { oldPIN, newPIN },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (response.status === 200) {
         Alert.alert("Success", "Login PIN changed successfully.");
         setOldPIN("");
         setNewPIN("");
         setConfirmPIN("");
+        navigation.goBack();
       } else {
-        Alert.alert("Error", data.message || "Failed to change PIN.");
+        Alert.alert("Error", "Failed to change PIN.");
       }
     } catch (err) {
-      console.error(err);
       Alert.alert("Error", "Something went wrong. Please try again.");
     }
   };
@@ -61,91 +62,158 @@ export default function ChangeLoginPIN() {
   return (
     <AppScreen colors={colors}>
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <Text style={[styles.title, { color: colors.text }]}>
-          Change Login PIN
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={24} color={colors.text} />
+          </TouchableOpacity>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>
+            Change Login PIN
+          </Text>
+        </View>
+
+        {/* Card */}
+        <View
+          style={[
+            styles.card,
+            { backgroundColor: colors.card, borderColor: colors.border },
+          ]}
+        >
+          <PinInput
+            label="Current PIN"
+            value={oldPIN}
+            onChange={setOldPIN}
+            colors={colors}
+          />
+
+          <PinInput
+            label="New PIN"
+            value={newPIN}
+            onChange={setNewPIN}
+            colors={colors}
+          />
+
+          <PinInput
+            label="Confirm New PIN"
+            value={confirmPIN}
+            onChange={setConfirmPIN}
+            colors={colors}
+          />
+
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.primary }]}
+            onPress={handleChangePIN}
+          >
+            <Text style={styles.buttonText}>Update PIN</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Text style={[styles.note, { color: colors.muted }]}>
+          Your PIN must be numeric and confidential. Do not share it with
+          anyone.
         </Text>
+      </View>
+    </AppScreen>
+  );
+}
 
+function PinInput({ label, value, onChange, colors }: any) {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <View style={{ marginBottom: 16 }}>
+      <Text style={{ color: colors.muted, marginBottom: 6 }}>{label}</Text>
+
+      <View style={[styles.inputWrapper, { borderColor: colors.border }]}>
         <TextInput
-          placeholder="Old PIN"
-          placeholderTextColor={colors.muted || "#999"}
-          value={oldPIN}
-          onChangeText={setOldPIN}
-          secureTextEntry
+          value={value}
+          onChangeText={onChange}
+          secureTextEntry={!visible}
           keyboardType="numeric"
           maxLength={6}
-          style={[
-            styles.input,
-            { borderColor: colors.border, color: colors.text },
-          ]}
-        />
-
-        <TextInput
-          placeholder="New PIN"
-          placeholderTextColor={colors.muted || "#999"}
-          value={newPIN}
-          onChangeText={setNewPIN}
-          secureTextEntry
-          keyboardType="numeric"
-          maxLength={6}
-          style={[
-            styles.input,
-            { borderColor: colors.border, color: colors.text },
-          ]}
-        />
-
-        <TextInput
-          placeholder="Confirm New PIN"
-          placeholderTextColor={colors.muted || "#999"}
-          value={confirmPIN}
-          onChangeText={setConfirmPIN}
-          secureTextEntry
-          keyboardType="numeric"
-          maxLength={6}
-          style={[
-            styles.input,
-            { borderColor: colors.border, color: colors.text },
-          ]}
+          style={[styles.inputField, { color: colors.text }]}
+          placeholder="••••••"
+          placeholderTextColor={colors.muted}
         />
 
         <TouchableOpacity
-          style={[styles.button, { backgroundColor: colors.primary }]}
-          onPress={handleChangePIN}
+          onPress={() => setVisible(!visible)}
+          style={styles.eyeButton}
         >
-          <Text style={styles.buttonText}>Change PIN</Text>
+          <Ionicons
+            name={visible ? "eye-off-outline" : "eye-outline"}
+            size={20}
+            color={colors.muted}
+          />
         </TouchableOpacity>
       </View>
-    </AppScreen>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
-    justifyContent: "center",
+    padding: 20,
   },
-  title: {
-    fontSize: 22,
-    fontWeight: "600",
-    marginBottom: 24,
-    textAlign: "center",
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginBottom: 20,
   },
-  input: {
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+  },
+  card: {
+    borderRadius: 18,
+    padding: 20,
     borderWidth: 1,
-    borderRadius: 10,
-    padding: 14,
-    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 5,
+    marginBottom: 20,
+  },
+  inputWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderRadius: 12,
+    backgroundColor: "transparent",
+  },
+  inputField: {
+    flex: 1,
+    paddingVertical: 14,
+    paddingHorizontal: 14,
     fontSize: 16,
+  },
+  eyeButton: {
+    paddingLeft: 8,
+    paddingRight: 8,
   },
   button: {
-    padding: 16,
-    borderRadius: 10,
-    marginTop: 10,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: "center",
+    marginTop: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   buttonText: {
-    color: "#fff",
+    color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "600",
+  },
+  note: {
+    fontSize: 13,
     textAlign: "center",
+    marginTop: 16,
+    lineHeight: 18,
   },
 });

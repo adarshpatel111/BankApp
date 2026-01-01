@@ -1,194 +1,221 @@
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "expo-router";
 import React, { useContext, useState } from "react";
 import {
-  View,
+  LayoutAnimation,
+  ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  LayoutAnimation,
+  View,
 } from "react-native";
-import { ThemeContext, Theme } from "../context/ThemeContext";
-import { themeColors } from "../utils/themeColors";
-import { Ionicons } from "@expo/vector-icons";
 import AppScreen from "../components/AppScreen";
+import { Theme, ThemeContext } from "../context/ThemeContext";
+import { themeColors } from "../utils/themeColors";
 
 export default function AppSettingsScreen() {
   const { theme, setTheme } = useContext(ThemeContext);
   const [open, setOpen] = useState(false);
   const colors = themeColors[theme];
+  const navigation = useNavigation<any>();
 
   const themes: Theme[] = ["blue", "orange", "dark"];
+
   const toggleDropdown = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setOpen(!open);
+    setOpen((prev) => !prev);
   };
+
   return (
     <AppScreen colors={colors}>
-      <ScrollView
-        style={[styles.container, { backgroundColor: colors.background }]}
-      >
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>
-          General Settings
+      <ScrollView style={{ backgroundColor: colors.background }}>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={24} color={colors.text} />
+          </TouchableOpacity>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>
+            Settings
+          </Text>
+        </View>
+
+        {/* Section */}
+        <Text style={[styles.sectionTitle, { color: colors.muted }]}>
+          GENERAL
         </Text>
 
-        {/* Example setting: Notifications */}
         <SettingItem
           icon="notifications-outline"
           label="Notifications"
-          onPress={() => alert("Notification settings")}
           colors={colors}
+          onPress={() => {}}
         />
 
-        {/* Example setting: Account */}
         <SettingItem
           icon="person-outline"
           label="Account"
-          onPress={() => alert("Account settings")}
           colors={colors}
+          onPress={() => {}}
         />
 
-        {/* Example setting: Theme Selection */}
+        {/* Theme Section */}
         <Text
-          style={[styles.sectionTitle, { color: colors.text, marginTop: 30 }]}
+          style={[styles.sectionTitle, { color: colors.muted, marginTop: 28 }]}
         >
-          Theme
+          APPEARANCE
         </Text>
-        <View style={styles.DropDowncontainer}>
-          {/* Dropdown Header */}
+
+        <View
+          style={[
+            styles.card,
+            { backgroundColor: colors.card, borderColor: colors.border },
+          ]}
+        >
           <TouchableOpacity
+            style={styles.dropdownHeader}
             onPress={toggleDropdown}
-            style={[
-              styles.dropdownHeader,
-              {
-                backgroundColor: colors.card,
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              },
-            ]}
           >
-            <Text style={{ color: colors.text, fontWeight: "600" }}>
-              {theme.toUpperCase()}
-            </Text>
-            <View
-              style={{
-                width: 15,
-                height: 15,
-                borderRadius: "50%",
-                backgroundColor: themeColors[theme].primary,
-                marginRight: 12,
-              }}
-            />
+            <View>
+              <Text style={[styles.label, { color: colors.text }]}>Theme</Text>
+              <Text style={[styles.value, { color: colors.muted }]}>
+                {theme.toUpperCase()}
+              </Text>
+            </View>
+            <View style={styles.themeDotRow}>
+              <View
+                style={[
+                  styles.themeDot,
+                  { backgroundColor: themeColors[theme].primary },
+                ]}
+              />
+              <Ionicons
+                name={open ? "chevron-up" : "chevron-down"}
+                size={18}
+                color={colors.muted}
+              />
+            </View>
           </TouchableOpacity>
 
-          {/* Dropdown Options */}
-          {open &&
-            themes.map((t) => {
-              const active = theme === t;
-              return (
-                <TouchableOpacity
-                  key={t}
-                  onPress={() => setTheme(t)}
-                  style={[
-                    styles.dropdownItem,
-                    {
-                      borderColor: colors.border,
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    },
-                  ]}
-                >
-                  <Text
-                    style={{
-                      color: colors.text,
-                      fontWeight: active ? "700" : "500",
+          {open && (
+            <View style={styles.dropdownList}>
+              {themes.map((t) => {
+                const active = theme === t;
+                return (
+                  <TouchableOpacity
+                    key={t}
+                    style={styles.dropdownItem}
+                    onPress={() => {
+                      setTheme(t);
+                      setOpen(false);
                     }}
                   >
-                    {t.toUpperCase()}
-                  </Text>
-                  <View
-                    style={{
-                      width: 15,
-                      height: 15,
-                      borderRadius: "50%",
-                      backgroundColor: themeColors[t].primary,
-                      marginRight: 12,
-                    }}
-                  />
-                </TouchableOpacity>
-              );
-            })}
+                    <Text
+                      style={{
+                        color: colors.text,
+                        fontWeight: active ? "700" : "500",
+                      }}
+                    >
+                      {t.toUpperCase()}
+                    </Text>
+                    <View
+                      style={[
+                        styles.themeDot,
+                        { backgroundColor: themeColors[t].primary },
+                      ]}
+                    />
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          )}
         </View>
       </ScrollView>
     </AppScreen>
   );
 }
 
-function SettingItem({
-  icon,
-  label,
-  onPress,
-  colors,
-}: {
-  icon: any;
-  label: string;
-  onPress: () => void;
-  colors: any;
-}) {
+function SettingItem({ icon, label, onPress, colors }: any) {
   return (
     <TouchableOpacity
-      style={[styles.settingItem, { backgroundColor: colors.card }]}
       onPress={onPress}
+      style={[styles.item, { backgroundColor: colors.card }]}
     >
-      <Ionicons name={icon} size={22} color={colors.text} />
-      <Text style={[styles.settingText, { color: colors.text }]}>{label}</Text>
-      <Ionicons name="chevron-forward-outline" size={20} color={colors.text} />
+      <Ionicons name={icon} size={22} color={colors.primary} />
+      <Text style={[styles.itemText, { color: colors.text }]}>{label}</Text>
+      <Ionicons name="chevron-forward" size={18} color={colors.muted} />
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  sectionTitle: { fontSize: 18, fontWeight: "600", marginBottom: 12 },
-  settingItem: {
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    padding: 20,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+  },
+  sectionTitle: {
+    fontSize: 13,
+    fontWeight: "600",
+    paddingHorizontal: 20,
+    marginBottom: 8,
+    letterSpacing: 0.6,
+  },
+  item: {
     flexDirection: "row",
     alignItems: "center",
     padding: 16,
-    borderRadius: 12,
-    marginBottom: 12,
-    justifyContent: "space-between",
+    borderRadius: 14,
+    marginHorizontal: 16,
+    marginBottom: 10,
   },
-  settingText: { fontSize: 16, marginLeft: 12, flex: 1 },
-  themeContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 12,
-  },
-  themeOption: {
+  itemText: {
     flex: 1,
-    paddingVertical: 14,
-    borderRadius: 12,
-    marginHorizontal: 4,
-    alignItems: "center",
+    fontSize: 16,
+    marginLeft: 12,
   },
-  DropDowncontainer: {
-    width: "100%",
-    marginTop: 10,
+  card: {
+    marginHorizontal: 16,
+    borderRadius: 16,
+    borderWidth: 1,
+    overflow: "hidden",
   },
   dropdownHeader: {
-    padding: 14,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#ccc",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 16,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  value: {
+    fontSize: 13,
+    marginTop: 2,
+  },
+  dropdownList: {
+    borderTopWidth: 1,
+    borderTopColor: "rgba(0,0,0,0.06)",
   },
   dropdownItem: {
-    padding: 14,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    marginTop: 4,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 16,
+  },
+  themeDotRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  themeDot: {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
   },
 });

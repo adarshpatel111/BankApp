@@ -6,5 +6,9 @@ const formatDate = (isoDate?: string) => {
   const year = d.getFullYear();
   return `${day}/${month}/${year}`;
 };
+const formatAmount = (value: number | string | undefined) => {
+  const num = Number(value ?? 0);
+  return num.toFixed(2);
+};
 
-export default formatDate;
+export { formatAmount, formatDate };
