@@ -1,9 +1,11 @@
 import cors from "cors";
 import crypto from "crypto";
+import dotenv from "dotenv";
 import express from "express";
 import jwt from "jsonwebtoken";
 import sql from "mssql";
 
+dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET || "SUPER_SECRET_KEY";
@@ -12,28 +14,16 @@ const ENC_SECRET = process.env.ENC_SECRET || "ACCOUNT_SECRET_32BYTE_KEY_123456";
 app.use(cors());
 app.use(express.json());
 
-// const dbConfig = {
-//   user: "sa",
-//   password: "Bsit@321",
-//   database: "BSCCSL_New",
-//   server: "LION-SERVER",
-//   MultipleActiveResultSets: true,
-//   options: {
-//     trustServerCertificate: true,
-//     enableArithAbort: true,
-//     instancename: "SQLEXPRESS",
-//   },
-//   port: 1434,
-// };
 const dbConfig = {
-  user: "sa",
-  password: "bsit",
-  database: "BSCCSL_New",
-  server: "DESKTOP-079RN7B",
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  server: process.env.DB_SERVER,
+  port: Number(process.env.DB_PORT),
   options: {
     trustServerCertificate: true,
     enableArithAbort: true,
-    instanceName: "SQLEXPRESS",
+    instancename: "SQLEXPRESS",
   },
 };
 
