@@ -170,13 +170,16 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     padding: 20,
     borderWidth: 1,
+    borderColor: "#ccc",
+    marginBottom: 20,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 6,
     elevation: 5,
-    marginBottom: 20,
+    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
   },
+
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",

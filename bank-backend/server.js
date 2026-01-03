@@ -128,20 +128,67 @@ app.get("/auth/user-products", authMiddleware, async (req, res) => {
   request.input("clientId", sql.VarChar(50), req.user.customerId.trim());
 
   const result = await request.query(`
-    SELECT
+   SELECT
     cp.AccountNumber,
     p.ProductName,
     cp.Balance,
     cp.Status,
     cp.IsActive
-    FROM customer c
-    INNER JOIN customerProduct cp
-        ON c.CustomerId = cp.CustomerId
-    INNER JOIN product p
-        ON cp.ProductId = p.ProductId
-    WHERE LTRIM(RTRIM(c.ClienId)) = @clientId
-      AND cp.IsActive = 1
-      AND (cp.Status NOT IN (5, 6) OR cp.Status IS NULL);
+FROM customer c
+INNER JOIN customerProduct cp
+    ON c.CustomerId = cp.CustomerId
+INNER JOIN product p
+    ON cp.ProductId = p.ProductId
+WHERE LTRIM(RTRIM(c.ClienId)) = @clientId
+  AND cp.IsActive = 1
+  AND (cp.Status NOT IN (5, 6) OR cp.Status IS NULL)
+ORDER BY
+CASE
+    -- Savings
+    WHEN p.ProductName IN (
+        'Saving Account','Super Saving','Smart Saving Plus',
+        'FLEXI DAILY ACCOUNT','FLEXI DAILY SAVING ACCOUNT',
+        'SCHY-DMND-SAVING','SCHY-GOLD-SAVING','SCHY-SLVR-SAVING'
+    ) THEN 1
+
+    -- RD
+    WHEN p.ProductName IN (
+        'Recurring Deposit','RD101','SFR-RD',
+        'SCHY-DMND-RD','SCHY-GOLD-RD','SCHY-SLVR-RD'
+    ) THEN 2
+
+    -- FD
+    WHEN p.ProductName IN (
+        'FIX DEPOSIT','SFR-FD','SFC-FD','SFW-FD',
+        'SMART PLUS FD','SCHY-DMND-FD','SCHY-GOLD-FD','SCHY-SLVR-FD'
+    ) THEN 3
+
+    -- Capital Builder
+    WHEN p.ProductName IN (
+        'Capital Builder 60','Capital Builder 72','Capital Builder 84'
+    ) THEN 4
+
+    -- Wealth Creator
+    WHEN p.ProductName IN (
+        'Wealth Creator 24','Wealth Creator 30',
+        'Wealth Creator 36','Wealth Creator 48','SFW-WC'
+    ) THEN 5
+
+    -- MIS / Schemes
+    WHEN p.ProductName IN (
+        'MIS','Silver 20','Silver 25',
+        'Akshaya Tritiya','Dhan Vruddhi Yojana'
+    ) THEN 6
+
+    -- Loans
+    WHEN p.ProductName IN (
+        'Personal Loan','Education Loan','Vehicle Loan',
+        'Business Loan','Gold Loan','Group Loan',
+        'Consumer Loan','Flexi Loan'
+    ) THEN 7
+
+    ELSE 99
+  END;
   `);
 
   console.log("USER PRODUCTS:", result.recordset);
